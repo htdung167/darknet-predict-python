@@ -16,14 +16,14 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h, classes
     cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
     return img
 
-def get_result_predict(img, cfg_path, weight_path, conf_threshold = 0.5, nms_threshold=0.4):
+def get_result_predict(img, cfg_path, weight_path, conf_threshold = 0.5, nms_threshold=0.4, dim=(416, 416)):
     # Load file weight và cfg
     height, width = img.shape[:2]
     scale = 1/255.0
     net = cv2.dnn.readNet(cfg_path, weight_path)
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
     # Đưa ảnh vào blob object
-    blob = cv2.dnn.blobFromImage(img, scale, (416, 416), (0, 0, 0), True, crop=False)
+    blob = cv2.dnn.blobFromImage(img, scale, dim, (0, 0, 0), True, crop=False)
     net.setInput(blob)
     # Get output
     outs = net.forward(get_output_layers(net))
@@ -71,24 +71,43 @@ def get_result_predict(img, cfg_path, weight_path, conf_threshold = 0.5, nms_thr
 
 
 if __name__=="__main__":
-    image = cv2.imread("./test_img_rec/24.jpg")
+    # cfg_path = "./cr_net_aug/cr-net.cfg"
+    # weight_path = "./cr_net_aug/cr-net_best.weights"
+    # with open("./cr_net_aug/yolo.names", 'r') as f:
+    #     classes = [line.strip() for line in f.readlines()]
+
+    # import os
+    # path = "./test_img_rec"
+    # path_save = "./result_recognize_aug"
+    # for f in os.listdir(path):
+    #     fpath = os.path.join(path, f)
+    #     image = cv2.imread(fpath)
+    #     results = get_result_predict(image, cfg_path, weight_path, conf_threshold = 0.5, nms_threshold=0.3, dim=(352, 128))
+
+    #     to_save = ""
+    #     with open(os.path.join(path_save, f.split(".")[0] + ".txt"), 'w') as f:
+    #         for result in results:
+    #             class_id, confidence, tl_x, tl_y, br_x, br_y = result
+    #             to_save = f"{classes[class_id]} {confidence} {round(tl_x)} {round(tl_y)} {round(br_x)} {round(br_y)}"
+    #             f.write(to_save + "\n")
+    #             # print(to_save)
+    #         # print("_____")
+
+
+
+    image = cv2.imread("./test_img_rec/397.jpg")
     h, w = image.shape[:2]
-    image = cv2.resize(image, (352, 128))
-
-    h_new, w_new = image.shape[:2]
-
-    cfg_path = "./cr_net/crnet.cfg"
-    weight_path = "./cr_net/crnet_best.weights"
-    with open("./cr_net/crnet.names", 'r') as f:
+    cfg_path = "./cr_net_aug/cr-net.cfg"
+    weight_path = "./cr_net_aug/cr-net_best.weights"
+    with open("./cr_net_aug/yolo.names", 'r') as f:
         classes = [line.strip() for line in f.readlines()]
-
-    results = get_result_predict(image, cfg_path, weight_path, conf_threshold = 0.5, nms_threshold=0.1)
+    results = get_result_predict(image, cfg_path, weight_path, conf_threshold = 0.5, nms_threshold=0.3, dim=(352, 128))
     first_line = []
     second_line = []
     for result in results:
         class_id, confidence, tl_x, tl_y, br_x, br_y = result
         # print(result)
-        if 0 < (tl_y + br_y) / 2 < h_new / 2:
+        if 0 < (tl_y + br_y) / 2 < h / 2:
             first_line.append(result)
         else:
             second_line.append(result)

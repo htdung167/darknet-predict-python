@@ -32,10 +32,21 @@ if __name__=='__main__':
     path_aug_nohe = "./result_end2end_aug_nohe"
     path_noaug_he = "./result_end2end_noaug_heuristic"
     path_aug_he = "./result_end2end_aug_heuristic"
+    path_focal_nohe = "./result_end2end_focal_nohe"
+    path_focal_he = "./result_end2end_focal_he"
+
     path_gt = "./gt_test_end2end"
     # print(f"Độ chính xác của noaug_nohe: {evaluate_end2end(path_noaug_nohe, path_gt)}")
     # print("####################################")
     # print(f"Độ chính xác của aug_nohe: {evaluate_end2end(path_aug_nohe, path_gt)}")
+    # print("####################################")
+    # print(f"Độ chính xác của focal_nohe: {evaluate_end2end(path_focal_nohe, path_gt)}")
+
+
     print(f"Độ chính xác của noaug_he: {evaluate_end2end(path_noaug_he, path_gt)}")
     print("####################################")
     print(f"Độ chính xác của aug_he: {evaluate_end2end(path_aug_he, path_gt)}")
+    print("####################################")
+    print(f"Độ chính xác của focal_he: {evaluate_end2end(path_focal_he, path_gt)}")
+
+    
